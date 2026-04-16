@@ -21,10 +21,10 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight text-slate-900" data-aos="fade-up">
-              <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">عيادة د. حسن أشرف</span>
+              <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">جمالك بأحدث التقنيات</span>
             </h2>
             <p className="text-xl sm:text-2xl text-slate-800 mb-3 font-medium" data-aos="fade-up" data-aos-delay="100">
-              للأمراض الجلدية والتجميل
+              مع د. حسن أشرف
             </p>
             <p className="text-lg sm:text-xl text-slate-700 mb-8 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
               استمتع بعلاجات جلدية عالمية المستوى مع د. حسن أشرف. أكثر من 10 سنوات من الخبرة في الأمراض الجلدية التجميلية والعلاجية.
