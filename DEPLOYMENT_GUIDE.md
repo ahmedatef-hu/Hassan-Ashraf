@@ -92,14 +92,23 @@ npm run test   # Run tests if available
    - Import your GitHub repository
    - Select root directory (not backend)
 
-3. **Configure Environment Variables**
+3. **Configure Build Settings**
+   - Framework Preset: Create React App
+   - Build Command: `npm run build`
+   - Output Directory: `build`
+   - Install Command: `npm install`
+
+4. **Configure Environment Variables**
    ```env
-   REACT_APP_API_URL=https://your-backend.railway.app/api
+   SUPABASE_URL=https://uetecmwahufwfadrawmh.supabase.co
+   SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGVjbXdhaHVmd2ZhZHJhd21oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyOTY2NzIsImV4cCI6MjA5MTg3MjY3Mn0.aDqN1GzkVuWL9zHA_B5FcjwsHbFecpSozvVtLSokZNA
+   NODE_ENV=production
    ```
 
-4. **Deploy**
+5. **Deploy**
    - Vercel will build and deploy automatically
    - Your app will be available at `https://your-app.vercel.app`
+   - Backend API runs as serverless functions at `/api/*`
 
 ### 4. Update CORS Settings
 
