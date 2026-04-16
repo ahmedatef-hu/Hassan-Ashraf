@@ -10,12 +10,18 @@ app.use(cors());
 app.use(express.json());
 
 // Supabase client
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const getSupabaseClient = () => {
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  );
+};
 
 // Health check
+app.get('/api', (req, res) => {
+  res.json({ status: 'ok', message: 'Hassan Ashraf Clinic API', timestamp: new Date().toISOString() });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -23,6 +29,7 @@ app.get('/api/health', (req, res) => {
 // Services - Get all grouped by category
 app.get('/api/services/grouped', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('services')
       .select('*')
@@ -49,6 +56,7 @@ app.get('/api/services/grouped', async (req, res) => {
 // Services - Get all
 app.get('/api/services', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('services')
       .select('*')
@@ -65,6 +73,7 @@ app.get('/api/services', async (req, res) => {
 // Branches - Get all
 app.get('/api/branches', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('branches')
       .select('*')
@@ -81,6 +90,7 @@ app.get('/api/branches', async (req, res) => {
 // Patients - Create or get existing
 app.post('/api/patients', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { name, phone, email } = req.body;
 
     // Check if patient exists
@@ -112,6 +122,7 @@ app.post('/api/patients', async (req, res) => {
 // Bookings - Create
 app.post('/api/bookings', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { patient_id, service_id, branch_id, appointment_date, notes } = req.body;
 
     const { data, error } = await supabase
@@ -143,6 +154,7 @@ app.post('/api/bookings', async (req, res) => {
 // Bookings - Get all with filters
 app.get('/api/bookings', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { days, statuses } = req.query;
     
     let query = supabase
@@ -179,6 +191,7 @@ app.get('/api/bookings', async (req, res) => {
 // Bookings - Get by phone
 app.get('/api/bookings/patient/:phone', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { phone } = req.params;
 
     const { data: patient } = await supabase
@@ -212,6 +225,7 @@ app.get('/api/bookings/patient/:phone', async (req, res) => {
 // Bookings - Update status
 app.patch('/api/bookings/:id/status', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { id } = req.params;
     const { status } = req.body;
 
@@ -233,6 +247,7 @@ app.patch('/api/bookings/:id/status', async (req, res) => {
 // Bookings - Cancel by patient
 app.patch('/api/bookings/:id/cancel', async (req, res) => {
   try {
+    const supabase = getSupabaseClient();
     const { id } = req.params;
 
     const { data, error } = await supabase
