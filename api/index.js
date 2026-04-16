@@ -123,28 +123,87 @@ app.post('/api/patients', async (req, res) => {
 app.post('/api/bookings', async (req, res) => {
   try {
     const supabase = getSupabaseClient();
-    const { patient_id, service_id, branch_id, appointment_date, notes } = req.body;
+    const { patient_name, patient_phone, service_name, branch_name, appointment_date, notes } = req.body;
 
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert([{
-        patient_id,
-        service_id,
-        branch_id,
-        appointment_date,
-        notes,
-        status: 'pending'
-      }])
-      .select(`
-        *,
-        patients(*),
-        services(*),
-        branches(*)
-      `)
+    // 1. Find or create patient
+    let patient;
+    const { data: existingPatient } = await supabase
+      .from('patients')
+      .select('*')
+      .eq('phone', patient_phone)
       .single();
 
-    if (error) throw error;
-    res.json({ success: true, data });
+    if (existingPatient) {
+      patient = existingPatient;
+      // Update name if changed
+      if (existingPatient.name !== patient_name) {
+        const { data: updated } = await supabase
+          .from('patients')
+          .update({ name: patient_name })
+          .eq('id', existingPatient.id)
+          .select()
+          .single();
+        patient = updated || existingPatient;
+      }
+    } else {
+      const { data: newPatient, error: patientError } = await supabase
+        .from('patients')
+        .insert([{ name: patient_name, phone: patient_phone }])
+        .select()
+        .single();
+      
+      if (patientError) throw patientError;
+      patient = newPatient;
+    }
+
+    // 2. Find service by name
+    const { data: service, error: serviceError } = await supabase
+      .from('services')
+      .select('*')
+      .eq('name', service_name)
+      .single();
+
+    if (serviceError || !service) {
+      throw new Error(`Service not found: ${service_name}`);
+    }
+
+    // 3. Find branch by name
+    const { data: branch, error: branchError } = await supabase
+      .from('branches')
+      .select('*')
+      .eq('name', branch_name)
+      .single();
+
+    if (branchError || !branch) {
+      throw new Error(`Branch not found: ${branch_name}`);
+    }
+
+    // 4. Create booking with IDs
+    const { data: booking, error: bookingError } = await supabase
+      .from('bookings')
+      .insert([{
+        patient_id: patient.id,
+        service_id: service.id,
+        branch_id: branch.id,
+        appointment_date,
+        notes: notes || null,
+        status: 'pending'
+      }])
+      .select()
+      .single();
+
+    if (bookingError) throw bookingError;
+
+    // 5. Return booking with full data
+    res.json({
+      success: true,
+      data: {
+        ...booking,
+        patients: patient,
+        services: service,
+        branches: branch
+      }
+    });
   } catch (error) {
     console.error('Error creating booking:', error);
     res.status(500).json({ success: false, message: error.message });
