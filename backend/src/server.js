@@ -81,13 +81,15 @@ app.use(notFound);
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Hassan Ashraf Clinic API Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-  console.log(`📋 Health check: http://localhost:${PORT}/health`);
-});
+// Start server (only in development, Vercel handles this in production)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Hassan Ashraf Clinic API Server running on port ${PORT}`);
+    console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+    console.log(`📋 Health check: http://localhost:${PORT}/health`);
+  });
+}
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
