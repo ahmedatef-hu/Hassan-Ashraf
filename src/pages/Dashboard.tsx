@@ -57,18 +57,7 @@ export const Dashboard: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    AOS.init({ duration: 800, once: true, offset: 100 });
-    loadBookings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    loadBookings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter]);
-
-  const loadBookings = async () => {
+  const loadBookings = React.useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -95,7 +84,18 @@ export const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true, offset: 100 });
+    loadBookings();
+  }, [loadBookings]);
+
+  useEffect(() => {
+    loadBookings();
+  }, [filter, loadBookings]);
+
+
 
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
     try {
@@ -417,7 +417,7 @@ export const Dashboard: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {bookings.map((booking, index) => (
+                  {bookings.map((booking) => (
                     <tr key={booking.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-5 py-4">
                         <div>
