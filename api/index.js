@@ -152,6 +152,44 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 // Bookings - Get all with filters
+app.get('/api/bookings/all', async (req, res) => {
+  try {
+    const supabase = getSupabaseClient();
+    const days = req.query['days[]'];
+    const statuses = req.query['statuses[]'];
+    
+    let query = supabase
+      .from('bookings')
+      .select(`
+        *,
+        patients(*),
+        services(*),
+        branches(*)
+      `)
+      .order('created_at', { ascending: false });
+
+    // Apply filters
+    if (days) {
+      const daysArray = Array.isArray(days) ? days : [days];
+      query = query.in('appointment_date', daysArray);
+    }
+
+    if (statuses) {
+      const statusesArray = Array.isArray(statuses) ? statuses : [statuses];
+      query = query.in('status', statusesArray);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Bookings - Get all with filters (alternative endpoint)
 app.get('/api/bookings', async (req, res) => {
   try {
     const supabase = getSupabaseClient();
