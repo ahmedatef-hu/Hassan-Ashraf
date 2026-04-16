@@ -60,10 +60,12 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     AOS.init({ duration: 800, once: true, offset: 100 });
     loadBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     loadBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const loadBookings = async () => {
@@ -138,16 +140,6 @@ export const Dashboard: React.FC = () => {
       'cancelled': 'bg-red-100 text-red-800 border-red-300'
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getStatusText = (status: string) => {
-    const texts: any = {
-      'pending': 'قيد الانتظار',
-      'confirmed': 'مؤكد',
-      'completed': 'مكتمل',
-      'cancelled': 'ملغي'
-    };
-    return texts[status] || status;
   };
 
   return (
