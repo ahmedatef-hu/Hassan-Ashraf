@@ -158,61 +158,70 @@ app.get('/api/bookings/all', async (req, res) => {
     const days = req.query['days[]'];
     const statuses = req.query['statuses[]'];
     
-    let query = supabase
+    // First, get all bookings
+    let bookingsQuery = supabase
       .from('bookings')
-      .select(`
-        id,
-        patient_id,
-        service_id,
-        branch_id,
-        appointment_date,
-        status,
-        notes,
-        cancelled_by,
-        created_at,
-        updated_at,
-        patients:patient_id (
-          id,
-          name,
-          phone,
-          email
-        ),
-        services:service_id (
-          id,
-          name,
-          description,
-          price,
-          category
-        ),
-        branches:branch_id (
-          id,
-          name,
-          address,
-          phone_numbers
-        )
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
 
     // Apply filters
     if (days) {
       const daysArray = Array.isArray(days) ? days : [days];
-      query = query.in('appointment_date', daysArray);
+      bookingsQuery = bookingsQuery.in('appointment_date', daysArray);
     }
 
     if (statuses) {
       const statusesArray = Array.isArray(statuses) ? statuses : [statuses];
-      query = query.in('status', statusesArray);
+      bookingsQuery = bookingsQuery.in('status', statusesArray);
     }
 
-    const { data, error } = await query;
+    const { data: bookings, error: bookingsError } = await bookingsQuery;
 
-    if (error) {
-      console.error('Supabase error:', error);
-      throw error;
+    if (bookingsError) {
+      console.error('Bookings error:', bookingsError);
+      throw bookingsError;
     }
 
-    console.log('Bookings data:', JSON.stringify(data, null, 2));
-    res.json({ success: true, data });
+    if (!bookings || bookings.length === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    // Get all related data
+    const patientIds = [...new Set(bookings.map(b => b.patient_id))];
+    const serviceIds = [...new Set(bookings.map(b => b.service_id))];
+    const branchIds = [...new Set(bookings.map(b => b.branch_id))];
+
+    const [patientsRes, servicesRes, branchesRes] = await Promise.all([
+      supabase.from('patients').select('*').in('id', patientIds),
+      supabase.from('services').select('*').in('id', serviceIds),
+      supabase.from('branches').select('*').in('id', branchIds)
+    ]);
+
+    // Create lookup maps
+    const patientsMap = {};
+    const servicesMap = {};
+    const branchesMap = {};
+
+    if (patientsRes.data) {
+      patientsRes.data.forEach(p => patientsMap[p.id] = p);
+    }
+    if (servicesRes.data) {
+      servicesRes.data.forEach(s => servicesMap[s.id] = s);
+    }
+    if (branchesRes.data) {
+      branchesRes.data.forEach(b => branchesMap[b.id] = b);
+    }
+
+    // Combine data
+    const enrichedBookings = bookings.map(booking => ({
+      ...booking,
+      patients: patientsMap[booking.patient_id] || null,
+      services: servicesMap[booking.service_id] || null,
+      branches: branchesMap[booking.branch_id] || null
+    }));
+
+    console.log('Enriched bookings:', JSON.stringify(enrichedBookings, null, 2));
+    res.json({ success: true, data: enrichedBookings });
   } catch (error) {
     console.error('Error fetching bookings:', error);
     res.status(500).json({ success: false, message: error.message });
