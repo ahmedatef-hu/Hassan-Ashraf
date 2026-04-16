@@ -21,10 +21,10 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight text-slate-900" data-aos="fade-up">
-              <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">الأمراض الجلدية المتقدمة</span>
+              <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">عيادة د. حسن أشرف</span>
             </h2>
             <p className="text-xl sm:text-2xl text-slate-800 mb-3 font-medium" data-aos="fade-up" data-aos-delay="100">
-              و العناية الجلدية المتميزة
+              للأمراض الجلدية والتجميل
             </p>
             <p className="text-lg sm:text-xl text-slate-700 mb-8 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
               استمتع بعلاجات جلدية عالمية المستوى مع د. حسن أشرف. أكثر من 10 سنوات من الخبرة في الأمراض الجلدية التجميلية والعلاجية.
@@ -107,10 +107,10 @@ export const Home: React.FC = () => {
 
             <div data-aos="fade-left">
               <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-slate-900">تعرف على د. حسن أشرف</h2>
-              <p className="text-xl text-blue-600 font-semibold mb-6">متخصص في الأمراض الجلدية والطب التجميلي</p>
+              <p className="text-xl text-blue-600 font-semibold mb-6">استشاري الأمراض الجلدية والتجميل</p>
               
               <p className="text-lg text-slate-700 mb-6 leading-relaxed">
-                مع أكثر من 10 سنوات من الخبرة في الأمراض الجلدية والطب التجميلي، د. حسن أشرف مكرس لتقديم أفضل علاجات العناية بالجلد. تجمع خبرته بين التكنولوجيا المتقدمة والرعاية الشخصية لتحقيق نتائج استثنائية.
+                مع أكثر من 10 سنوات من الخبرة في الأمراض الجلدية والتجميل، د. حسن أشرف مكرس لتقديم أفضل علاجات العناية بالبشرة. تجمع خبرته بين التكنولوجيا المتقدمة والرعاية الشخصية لتحقيق نتائج استثنائية.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -120,7 +120,7 @@ export const Home: React.FC = () => {
                       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                     </svg>
                   </div>
-                  <span className="text-slate-700 font-medium">خبرة جلدية متقدمة</span>
+                  <span className="text-slate-700 font-medium">خبرة واسعة في الأمراض الجلدية</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
@@ -128,7 +128,7 @@ export const Home: React.FC = () => {
                       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                     </svg>
                   </div>
-                  <span className="text-slate-700 font-medium">نهج يركز على المريض</span>
+                  <span className="text-slate-700 font-medium">رعاية شخصية لكل مريض</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
@@ -136,7 +136,7 @@ export const Home: React.FC = () => {
                       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                     </svg>
                   </div>
-                  <span className="text-slate-700 font-medium">علاجات حديثة</span>
+                  <span className="text-slate-700 font-medium">أحدث التقنيات العلاجية</span>
                 </div>
               </div>
 
