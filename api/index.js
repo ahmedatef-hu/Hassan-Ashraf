@@ -161,10 +161,35 @@ app.get('/api/bookings/all', async (req, res) => {
     let query = supabase
       .from('bookings')
       .select(`
-        *,
-        patients(*),
-        services(*),
-        branches(*)
+        id,
+        patient_id,
+        service_id,
+        branch_id,
+        appointment_date,
+        status,
+        notes,
+        cancelled_by,
+        created_at,
+        updated_at,
+        patients:patient_id (
+          id,
+          name,
+          phone,
+          email
+        ),
+        services:service_id (
+          id,
+          name,
+          description,
+          price,
+          category
+        ),
+        branches:branch_id (
+          id,
+          name,
+          address,
+          phone_numbers
+        )
       `)
       .order('created_at', { ascending: false });
 
@@ -181,7 +206,12 @@ app.get('/api/bookings/all', async (req, res) => {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+
+    console.log('Bookings data:', JSON.stringify(data, null, 2));
     res.json({ success: true, data });
   } catch (error) {
     console.error('Error fetching bookings:', error);
